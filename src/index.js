@@ -83,7 +83,7 @@ function renderPhoto(photoData) {
       lightbox.refresh();
     }
   );
-  activeBtnLoadMore();
+  
 }
 
 function activeBtnLoadMore() {
@@ -111,13 +111,13 @@ function anserMessage(lengthCurrentPhoto) {
     );
     dissActiveBtnLoadMore();
   } else if (fotoTotal === fotoTotalLength) {
-    console.log("цц")
     Notify.success(
         `Hooray! We found ${lengthCurrentPhoto} images.`,
         optionMessage
       );
     dissActiveBtnLoadMore();
   }
+  activeBtnLoadMore();
 }
 
 function anserError() {
