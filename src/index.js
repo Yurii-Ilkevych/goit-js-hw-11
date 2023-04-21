@@ -58,7 +58,6 @@ async function fetchSearch(searchText) {
 
     try {
          const response = await axios.get(`${BASE_URL}${searchText}&per_page=40&page=${page}&image_type=photo&orientation=horizontal&safesearch=true`);
-         console.log(response)
         return response
       } catch (error) {
         console.log(error)
