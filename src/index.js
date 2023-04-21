@@ -2,15 +2,15 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import 'notiflix/dist/notiflix-3.2.6.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-
+import axios from "axios"
 const optionMessage = {
   position: 'right-top',
   timeout: 2250,
   fontSize: '20px',
   borderRadius: '15px',
 };
-const BASE_URL =
-'https://pixabay.com/api/?key=35606750-af8374c970d110a408f6cc0ed&q=';
+const API_KEY = "35606750-af8374c970d110a408f6cc0ed"
+const BASE_URL = 'https://pixabay.com/api/';
 const refs = {
   formSearch: document.querySelector('#search-form'),
   input: document.querySelector('[type="text"]'),
@@ -19,7 +19,6 @@ const refs = {
   gallery: document.querySelector('.gallery'),
 };
 
-const axios = require('axios').default;
 const lightbox = new SimpleLightbox('.gallery a');
 refs.formSearch.addEventListener('submit', getTextForSearch);
 refs.btnLoadMore.addEventListener('click', searchPhoto);
@@ -27,10 +26,15 @@ let page = 1;
 let searchText = '';
 let fotoTotal = 0;
 let fotoTotalLength = 0;
-
+const searchParams = new URLSearchParams({
+    image_type: "photo",
+    orientation: "horizontal",
+    safesearch: "true",
+  });
+const optionsSearch = searchParams.toString()
 function getTextForSearch(event) {
   event.preventDefault();
-  searchText = event.currentTarget.elements.searchQuery.value;
+  searchText = event.currentTarget.elements.searchQuery.value.trim();
   if (searchText === '') {
     anserWarning();
     return;
@@ -43,24 +47,17 @@ function getTextForSearch(event) {
 
 function searchPhoto() {
 
-  fetchSearch(searchText).then(processingPhoto).catch(anserError);
+  fetchSearch(searchText);
 }
 
 async function fetchSearch(searchText) {
 
-
-//   axios.catch(anserError)
-//     .get(
-//       `${BASE_URL}${searchText}&per_page=40&page=${page}&image_type=photo&orientation=horizontal&safesearch=true`
-//     )
-//     .then(processingPhoto)
-//     .catch(anserError);
-
     try {
-         const response = await axios.get(`${BASE_URL}${searchText}&per_page=40&page=${page}&image_type=photo&orientation=horizontal&safesearch=true`);
-        return response
+         const response = await axios.get(`${BASE_URL}?key=${API_KEY}&q=${searchText}&per_page=40&page=${page}&${optionsSearch}`);
+        return processingPhoto(response)
       } catch (error) {
         console.log(error)
+        anserError()
       }
 }
 
@@ -74,7 +71,7 @@ function processingPhoto(value) {
 }
 
 function renderPhoto(photoData) {
-  activeBtnLoadMore();
+  
 
   anserMessage(photoData.hits.length);
   page += 1;
@@ -86,6 +83,7 @@ function renderPhoto(photoData) {
       lightbox.refresh();
     }
   );
+  activeBtnLoadMore();
 }
 
 function activeBtnLoadMore() {
@@ -98,6 +96,7 @@ function dissActiveBtnLoadMore() {
 
 function anserMessage(lengthCurrentPhoto) {
   fotoTotalLength += lengthCurrentPhoto;
+
   if (fotoTotal > fotoTotalLength) {
     Notify.success(
       `Hooray! We found ${
@@ -112,19 +111,22 @@ function anserMessage(lengthCurrentPhoto) {
     );
     dissActiveBtnLoadMore();
   } else if (fotoTotal === fotoTotalLength) {
-    Notify.info(
-      "We're sorry, but you've reached the end of search results.",
-      optionMessage
-    );
+    console.log("цц")
+    Notify.success(
+        `Hooray! We found ${lengthCurrentPhoto} images.`,
+        optionMessage
+      );
     dissActiveBtnLoadMore();
   }
 }
 
 function anserError() {
+    dissActiveBtnLoadMore()
   Notify.failure(
     'Sorry, there are no images matching your search query. Please try again.',
     optionMessage
   );
+  
 }
 function anserWarning() {
   Notify.info('Please enter a value to search for', optionMessage);
