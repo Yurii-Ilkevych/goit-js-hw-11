@@ -34,6 +34,7 @@ const searchParams = new URLSearchParams({
 const optionsSearch = searchParams.toString()
 function getTextForSearch(event) {
   event.preventDefault();
+  dissActiveBtnLoadMore();
   searchText = event.currentTarget.elements.searchQuery.value.trim();
   if (searchText === '') {
     anserWarning();
