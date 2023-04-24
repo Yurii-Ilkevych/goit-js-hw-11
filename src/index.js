@@ -30,6 +30,7 @@ function getTextForSearch(event) {
   clearPhotoContainerAndInputValue();
   page = 1;
   cleanerfotoTotalLength();
+  scroll()
   searchPhoto();
 }
 
@@ -46,3 +47,23 @@ const processingPhoto = value => {
   renderPhoto(value.data);
   page += 1;
 };
+
+
+
+const btnPort = document.getElementById('.gallery');
+
+function scroll(){
+    window.scrollBy({
+        //top: cardHeight * 2,
+        behavior: "smooth",
+      });
+}
+
+// let infScroll = new InfiniteScroll( elem, {
+//     // options
+//     path: '.pagination__next',
+//     append: '.post',
+//     history: false,
+//   });
+  
+

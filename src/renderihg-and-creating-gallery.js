@@ -3,7 +3,6 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import { anserMessages } from './notification';
 import { refs } from './index';
 export { renderPhoto };
-
 const lightbox = new SimpleLightbox('.gallery a');
 
 const renderPhoto = photoData => {
